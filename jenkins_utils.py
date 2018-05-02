@@ -14,5 +14,5 @@ def get_server_instance():
 def get_job_details(server):
     return server.get_jobs()
 
-def build_job(server, job_name, params):
+def build_job(server, job_name, params=None):
     server.build_job(job_name, params)

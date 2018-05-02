@@ -3,6 +3,7 @@ FROM tiangolo/uwsgi-nginx-flask:flask-python2.7
 # Create app directory
 RUN mkdir -p /usr/src/app
 RUN pip install jenkinsapi
+RUN pip install flask
 WORKDIR /usr/src/app
 # Bundle app source
 COPY . /usr/src/app

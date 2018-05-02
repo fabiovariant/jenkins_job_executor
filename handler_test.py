@@ -1,4 +1,5 @@
 import unittest
+import json
 import handler as JenkinsJobsHandler
 
 class TestJenkinsJobsHandler(unittest.TestCase):
@@ -11,9 +12,21 @@ class TestJenkinsJobsHandler(unittest.TestCase):
         response = self.app.get('/jobs')
         self.__test_job_list_status(response)
         json_data = response.get_json()
-        print json_data
-    
+        self.__test_jobs_list_data(json_data)
+
+    # Deve testar se o status do retorno esta correto.
     def __test_job_list_status(self, response):
+        self.assertEqual(200, response.status_code)
+
+    # Deve testar se o retorno esta dentro do esperado.
+    def __test_jobs_list_data(self, json_data):
+        print(json_data)
+
+    def test_execute_job(self):
+        d = {'job_name': 'Airports'}
+        response = self.app.post('/jobs',
+            data=json.dumps(d),
+            content_type='application/json',)
         self.assertEqual(200, response.status_code)
 
 if __name__ == '__main__':
