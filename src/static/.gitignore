@@ -1,12 +1,10 @@
-*.pyc
-
 .DS_Store
-/src/static/node_modules/
-/src/static/dist/
+node_modules/
+/dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/src/static/test/unit/coverage/
+/test/unit/coverage/
 
 # Editor directories and files
 .idea

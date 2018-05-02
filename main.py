@@ -1,4 +1,4 @@
-import handler
+from src.server import handler
 
 def main():
     handler.app.run()

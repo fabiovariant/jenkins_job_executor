@@ -8,6 +8,8 @@ JENKINS_PASS = os.environ['JENKINS_PASS']
 
 def get_server_instance():
     jenkins_url = JENKINS_HOST + ':' + JENKINS_PORT
+    print JENKINS_USER
+    print JENKINS_PASS
     server = Jenkins(jenkins_url, username=JENKINS_USER, password=JENKINS_PASS)
     return server
 
