@@ -25,7 +25,7 @@ class TestJenkinsJobsHandler(unittest.TestCase):
     def test_execute_job(self):
         d = {'job_name': 'Airports'}
         response = self.app.post('/jobs',
-            data=json.dumps(d),
+            data= json.dumps(d),
             content_type='application/json',)
         self.assertEqual(200, response.status_code)
 
