@@ -15,7 +15,7 @@ def list_jobs_handler():
 
 @app.route('/jobs', methods=['POST'])
 def execute_job():
-    data = request.get_json()['body']
+    data = request.get_json()['data']
     utils.build_job(jenkins_server_instance, data['jobName'])
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 

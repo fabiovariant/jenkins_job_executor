@@ -23,7 +23,7 @@ class TestJenkinsJobsHandler(unittest.TestCase):
         print(json_data)
 
     def test_execute_job(self):
-        d = {'job_name': 'Airports'}
+        d = dict(data={'job_name': 'Airports'})
         response = self.app.post('/jobs',
             data= json.dumps(d),
             content_type='application/json',)

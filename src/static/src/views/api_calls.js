@@ -14,7 +14,7 @@ export default {
         'Content-Type': 'application/json'
       },
       crossDomain: true,
-      body: {
+      data: {
         jobName: exJobName
       }
     })
