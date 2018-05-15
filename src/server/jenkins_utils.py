@@ -15,8 +15,7 @@ def get_job_details(server):
     jobs = server.get_jobs()
     r_jobs = list()
     for job in jobs:
-        job_info = get_job_information(server, job['name'])
-        r_jobs.append(job_info_to_dict(job_info))
+        r_jobs.append(job_info_to_dict(job))
     return r_jobs
         
 
@@ -33,5 +32,5 @@ def get_job_information(server, name):
 
 def job_info_to_dict(job_info):
     return {'jobName': job_info['name'], \
-            'jobDesc': job_info['description'], \
+            'jobDesc': '', \
             'isInExec': False}
