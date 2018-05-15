@@ -21,7 +21,7 @@ export JENKINS_PASS={{your_secret}}
 
 ### Init the python backend:
 ```
-python main.py
+python src/main.py
 ```
 
 ### Init the Vue.js interface

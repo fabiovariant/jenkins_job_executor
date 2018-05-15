@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import calls from './api_calls'
+import calls from '../api_calls'
 
 export default {
   name: 'job',
