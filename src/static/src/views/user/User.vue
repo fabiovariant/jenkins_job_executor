@@ -20,7 +20,7 @@
       <b-col sm="10">
         <b-form-group>
           <label for="nmUser">Password</label>
-          <b-form-input v-model.trim="password" type="password" id="password" placeholder="your-secure-password"></b-form-input>
+          <b-form-input v-model.trim="password" type="password" id="password" placeholder="Sua palavra passe"></b-form-input>
         </b-form-group>
       </b-col>
     </b-row>

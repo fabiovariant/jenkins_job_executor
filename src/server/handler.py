@@ -28,20 +28,16 @@ class User(Resource):
 
     def post(self):
         data = request.get_json()['data']
-        print(data)
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
     def get(self):
         data = request.get_json()['data']
-        print(data)
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
     def put(self):
         data = request.get_json()['data']
-        print(data)
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
     def delete(self):
         data = request.get_json()['data']
-        print(data)
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
