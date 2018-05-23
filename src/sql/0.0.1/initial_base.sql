@@ -40,14 +40,15 @@ CREATE TABLE job_user_permission (
     FOREIGN KEY (cd_user_Type) REFENCES Dm_User_type(cd_user_Type)
 );
 
+-- Não tem FK com a Job pois um Job pode deixar de existir.
 CREATE TABLE job_exec_history (
     id_exec                 int(10)         NOT NULL AUTO_INCREMENT,
     id_user                 int             NOT NULL,
-    id_job                  int             NOT NULL,
+    job_name                int             NOT NULL,
     dt_exec                 TIMESTAMP       NOT NULL DEFAULT NOW(),
-    exec_post               VARCHAR(4000)   NOT NULL,
-    exec_return             VARCHAR(4000)   NOT NULL,
-    PRIMARY KEY (id_exec, id_user, id_job),
+    exec_return             VARCHAR(4000),
+    sucess                  boolean,
+    finished                boolean,
+    PRIMARY KEY (id_exec, id_user, job_name),
     FOREIGN KEY (id_user) REFENCES user(id),
-    FOREIGN KEY (id_job) REFENCES job(id_job)
 );

@@ -18,7 +18,7 @@ api = Api(app)
 #     jti = decrypted_token['jti']
 #     return models.RevokedTokenModel.is_jti_blacklisted(jti)
 
-api.add_resource(handler.Jobs, '/jobs')
+api.add_resource(handler.JobsExec, '/jobsexec')
 api.add_resource(handler.User, '/user')
 
 

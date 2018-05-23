@@ -15,3 +15,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+/src/static/package-lock.json
