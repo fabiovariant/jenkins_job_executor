@@ -17,7 +17,17 @@ export default {
     {
       name: 'Relatórios',
       url: '/reports',
-      icon: 'icon-doc'
+      icon: 'icon-doc',
+      children: [
+        {
+          name: 'Executar',
+          url: '/reports/new'
+        },
+        {
+          name: 'Histórico',
+          url: '/reports/history'
+        }
+      ]
     },
     {
       name: 'Usuários',
@@ -29,7 +39,22 @@ export default {
           url: '/user/new'
         },
         {
-          name: 'buscar',
+          name: 'Buscar',
+          url: '/user/list'
+        }
+      ]
+    },
+    {
+      name: 'Configuração',
+      url: '/user',
+      icon: 'icon-settings',
+      children: [
+        {
+          name: 'Jobs',
+          url: '/user/new'
+        },
+        {
+          name: 'Usuários',
           url: '/user/list'
         }
       ]

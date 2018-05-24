@@ -20,6 +20,7 @@ api = Api(app)
 
 api.add_resource(handler.JobsExec, '/jobsexec')
 api.add_resource(handler.User, '/user')
+api.add_resource(handler.JobDetails, '/job/<string:job_name>')
 
 
 if __name__ == '__main__':

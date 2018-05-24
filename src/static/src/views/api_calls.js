@@ -3,35 +3,43 @@ import constants from './constants'
 
 const API_URL = constants.API_BASE_URL + ':' + constants.API_BASE_PORT
 
+function listJobs () {
+  return axios.get(API_URL + '/jobsexec')
+}
+
+function exec (exJobName) {
+  return axios.post(API_URL + '/jobsexec', {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json'
+    },
+    crossDomain: true,
+    data: {
+      jobName: exJobName
+    }
+  })
+}
+
+function getAllCustomers () {
+  return axios.get(API_URL + '/user')
+}
+
+function addNewCustomer (userData) {
+  return axios.post(API_URL + '/user', {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json'
+    },
+    crossDomain: true,
+    data: {
+      userData: userData
+    }
+  })
+}
+
 export default {
-  listJobs: function () {
-    return axios.get(API_URL + '/jobs')
-  },
-  exec: function (exJobName) {
-    return axios.post(API_URL + '/jobs', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
-      crossDomain: true,
-      data: {
-        jobName: exJobName
-      }
-    })
-  },
-  getAllCustomers: function () {
-    return axios.get(API_URL + '/user')
-  },
-  addNewCustomer: function (userData) {
-    return axios.post(API_URL + '/user', {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
-      crossDomain: true,
-      data: {
-        userData: userData
-      }
-    })
-  }
+  listJobs,
+  exec,
+  getAllCustomers,
+  addNewCustomer
 }

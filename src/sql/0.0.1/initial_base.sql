@@ -1,3 +1,5 @@
+START TRANSACTION;
+
 CREATE DATABASE jenkins_executor;
 USE jenkins_executor;
 
@@ -16,19 +18,17 @@ CREATE TABLE user (
     user_password       varchar(250)    NOT NULL,
     cd_user_Type        varchar(5)      NOT NULL,
     is_Blocked          boolean,
-    CONSTRAINT Pk_user PRIMARY KEY (id, nm_Email),
+    PRIMARY KEY(id, nm_Email),
     CONSTRAINT uc_email UNIQUE (nm_Email),
-    FOREIGN KEY (cd_user_Type) REFENCES Dm_User_type(cd_user_Type),
-    PRIMARY KEY(id, nm_User, nm_Email)
+    FOREIGN KEY (cd_user_Type) REFERENCES Dm_User_type(cd_user_Type)
 );
 
 -- Tabela com lista de jobs
 CREATE TABLE job (
     id_job              int(10)         NOT NULL AUTO_INCREMENT,
-    nm_Job              varchar(50)     NOT NULL,
+    nm_Job              varchar(50)     NOT NULL UNIQUE,
     job_param           VARCHAR(4000)   NOT NULL,
     PRIMARY KEY(id_job, nm_Job)
-    CONSTRAINT uc_nm_job UNIQUE (nm_Job),
 );
 
 -- Tabela com tipos de permissão em jobs.
@@ -36,8 +36,8 @@ CREATE TABLE job_user_permission (
     id_job              int(10)         NOT NULL,
     cd_user_Type        varchar(5)      NOT NULL,
     PRIMARY KEY(id_job, cd_user_Type),
-    FOREIGN KEY (id_job) REFENCES job(id),
-    FOREIGN KEY (cd_user_Type) REFENCES Dm_User_type(cd_user_Type)
+    FOREIGN KEY (id_job) REFERENCES job(id_job),
+    FOREIGN KEY (cd_user_Type) REFERENCES Dm_User_type(cd_user_Type)
 );
 
 -- Não tem FK com a Job pois um Job pode deixar de existir.
@@ -50,5 +50,6 @@ CREATE TABLE job_exec_history (
     sucess                  boolean,
     finished                boolean,
     PRIMARY KEY (id_exec, id_user, job_name),
-    FOREIGN KEY (id_user) REFENCES user(id),
+    FOREIGN KEY (id_user) REFERENCES user(id)
 );
+COMMIT;

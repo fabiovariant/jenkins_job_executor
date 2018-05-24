@@ -2,7 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Home from '@/views/Home'
+// Jobs
 import JobCard from '@/views/job/JobCard'
+import BuildHistory from '@/views/job/BuildHistory'
+// Users
 import ListUsers from '@/views/user/ListUsers'
 import NewUser from '@/views/user/NewUser'
 
@@ -18,7 +21,21 @@ export default new Router({
     {
       path: '/reports',
       name: 'Jobs',
-      component: JobCard
+      component: {
+        render (c) { return c('router-view') }
+      },
+      children: [
+        {
+          path: '/reports/new',
+          name: 'JobExec',
+          component: JobCard
+        },
+        {
+          path: '/reports/history',
+          name: 'BuildsHistory',
+          component: BuildHistory
+        }
+      ]
     },
     {
       path: '/user',

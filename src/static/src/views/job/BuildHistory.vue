@@ -30,14 +30,6 @@
               >
             </b-table>
           </b-row>
-          <div slot="footer">
-            <router-link :to="{path: 'user/new'}" style="color: white">
-              <b-button type="reset" size="sm" variant="primary">
-                  <i class="fa fa-plus-circle"></i> Cadastrar novo
-              </b-button>
-            </router-link>
-            <b-button type="reset" size="sm" variant="danger"><i class="fa fa-ban"></i> Limpar</b-button>
-          </div>
         </b-card>
       </div>
     </b-form>
@@ -54,21 +46,23 @@ export default {
       txSearch: null,
       shownItems: null,
       fields: [
-        {key: 'name', label: 'Nome'},
-        {key: 'type', label: 'Tipo'},
-        {key: 'isActive', label: 'Ativo?'}
+        {key: 'jobName', label: 'Nome'},
+        {key: 'date', label: 'Data'},
+        {key: 'isSuccess', label: 'Execução'},
+        {key: 'details', label: 'Detalhes'}
       ],
       items: [],
       searchBy: [
         { value: null, text: 'Selecione um tipo de busca' },
-        { value: 'NM', text: 'Por Nome' }
+        { value: 'NM', text: 'Por Nome' },
+        { value: 'DT', text: 'Data' }
       ]
     }
   },
   methods: {
     rowClickSelector (record, index, object) {
-      let customerName = record.name
-      this.$router.push({ path: `/users/${customerName}` })
+      let jobName = record.jobName
+      this.$router.push({ path: `/users/${jobName}` })
     },
     search: function (event) {
       if (this.selectedSearch === 'NM') {
