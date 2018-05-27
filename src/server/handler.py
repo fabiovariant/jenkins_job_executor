@@ -59,3 +59,15 @@ class User(Resource):
     def delete(self):
         data = request.get_json()['data']
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
+class JobCad(Resource):
+
+    def __init__(self):
+        self.service = JobService()
+
+    def get(self):
+        try:
+            jenkins_jobs = self.service.get_jenkins_jobs()
+            return jenkins_jobs, 200, {'ContentType':'application/json'}
+        except:
+            return json.dumps({'success':False}), 500, {'ContentType':'application/json'}

@@ -41,14 +41,16 @@ class JenkinsUtils(object):
             self.JENKINS_PORT = os.environ['JENKINS_PORT']
             self.JENKINS_USER = os.environ['JENKINS_USER']
             self.JENKINS_PASS = os.environ['JENKINS_PASS']
-            self.__connect()
+            self.server = self.__connect()
         except:
             print("Unexpected error:", sys.exc_info()[0])
+            raise
  
-    def __connect():
-        w_url = re.sub( '\/$', '', self.JENKINS_HOST)
-        w_url = w_url + ':' + str(self.JENKINS_PORT)
-        self.server = jenkins.Jenkins(w_url,  username=self.JENKINS_USER, password=self.JENKINS_PASS)
+    def __connect(self):
+        #w_url = re.sub( '\/$', '', self.JENKINS_HOST)
+        #w_url = w_url + ':' + str(self.JENKINS_PORT)
+        jenkins_url = self.JENKINS_HOST + ':' + self.JENKINS_PORT
+        return jenkins.Jenkins(jenkins_url,  username=self.JENKINS_USER, password=self.JENKINS_PASS)
  
     def get_job_config(self, job_name):
         w_job_config = self.server.get_job_config(job_name)
@@ -66,6 +68,9 @@ class JenkinsUtils(object):
 
     def build_job(self, job_name, params=None):
         self.server.build_job(job_name, params)
+
+    def get_all_jenkins_job(self):
+        return self.server.get_jobs()
  
     def get_job_parameters(self, job_name):
         def get_param_structure(paramDefinition, order, paramType):

@@ -51,7 +51,7 @@ export default {
       children: [
         {
           name: 'Jobs',
-          url: '/user/new'
+          url: '/job'
         },
         {
           name: 'Usuários',

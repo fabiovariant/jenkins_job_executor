@@ -37,9 +37,14 @@ function addNewCustomer (userData) {
   })
 }
 
+function listJenkinsJobs () {
+  return axios.get(API_URL + '/job')
+}
+
 export default {
   listJobs,
   exec,
   getAllCustomers,
-  addNewCustomer
+  addNewCustomer,
+  listJenkinsJobs
 }

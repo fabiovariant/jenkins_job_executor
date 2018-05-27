@@ -8,6 +8,8 @@ import BuildHistory from '@/views/job/BuildHistory'
 // Users
 import ListUsers from '@/views/user/ListUsers'
 import NewUser from '@/views/user/NewUser'
+// Cadastro de novos Jobs
+import NewJob from '@/views/job_cad/NewJob'
 
 Vue.use(Router)
 
@@ -55,6 +57,11 @@ export default new Router({
           component: ListUsers
         }
       ]
+    },
+    {
+      path: '/job',
+      name: 'Job',
+      component: NewJob
     }
   ]
 })

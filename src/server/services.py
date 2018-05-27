@@ -9,7 +9,11 @@ from .utils import *
 class JobService(object):
 
     def __init__(self):
-        self.jenkins_server = JenkinsUtils()
+        try:
+            self.jenkins_server = JenkinsUtils()
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
+            raise
 
     # Executa um job, salva informações sobre a execução e dispara uma Thread que irá verificar
     # e salvar informações sobre o build.
@@ -74,9 +78,14 @@ class JobService(object):
     # retorna os parametros de execução se esses existirem.
     def get_job_details(self, job_name):
         try:
-            return job_info = {
+            job_info = {
                 'parameters': self.jenkins_server.get_job_parameters(job_name),
                 'job_config': self.jenkins_server.get_job_config(job_name)
             }
+            return job_info
         except:
             raise
+
+    def get_jenkins_jobs(self):
+        jobs = self.jenkins_server.get_all_jenkins_job()
+        return jobs
