@@ -48,9 +48,6 @@ export default {
       jobsList: [
       ],
       userTypeList: [
-        {value: 'ROOT', text: 'Root'},
-        {value: 'ADM', text: 'Administrador'},
-        {value: 'VEND', text: 'Vendas'}
       ],
       jobData: {
         nmJob: null,
@@ -62,20 +59,44 @@ export default {
   },
   methods: {
     save: function () {
-      console.log(this.jobData.tpUser)
+      console.log(this.jobData)
+      calls.addNewJob(this.jobData)
+      .then(response => {
+        console.log(response.data)
+        this.jobData.nmJob = null
+        this.jobData.tpUser = null
+      }).catch(e => {
+        console.log('Error saving new Job' + e)
+      })
+    },
+
+    listJenkinsJob: function () {
+      calls.listJenkinsJobs()
+      .then(response => {
+        console.log(response.data)
+        for (let i = 0; i < response.data.length; i++) {
+          const element = response.data[i]
+          const job = {value: element.name, text: element.name}
+          this.jobsList.push(job)
+        }
+      }).catch(e => {
+        console.log('Error listing jenkins jobs' + e)
+      })
     }
   },
   created: function () {
-    calls.listJenkinsJobs()
+    this.listJenkinsJob()
+
+    calls.getUserTypesList()
     .then(response => {
       console.log(response.data)
       for (let i = 0; i < response.data.length; i++) {
         const element = response.data[i]
-        const job = {value: element.name, text: element.name}
-        this.jobsList.push(job)
+        const type = {value: element.cd_user_type, text: (element.cd_user_type + '(' + element.ds_user_type + ')')}
+        this.userTypeList.push(type)
       }
     }).catch(e => {
-      console.log('Error saving new user' + e)
+      console.log('Error listing user type list' + e)
     })
   }
 }

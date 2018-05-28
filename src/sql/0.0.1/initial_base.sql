@@ -27,7 +27,6 @@ CREATE TABLE user (
 CREATE TABLE job (
     id_job              int(10)         NOT NULL AUTO_INCREMENT,
     nm_Job              varchar(50)     NOT NULL UNIQUE,
-    job_param           VARCHAR(4000)   NOT NULL,
     PRIMARY KEY(id_job, nm_Job)
 );
 
@@ -44,7 +43,7 @@ CREATE TABLE job_user_permission (
 CREATE TABLE job_exec_history (
     id_exec                 int(10)         NOT NULL AUTO_INCREMENT,
     id_user                 int             NOT NULL,
-    job_name                int             NOT NULL,
+    job_name                varchar(50)     NOT NULL,
     dt_exec                 TIMESTAMP       NOT NULL DEFAULT NOW(),
     exec_return             VARCHAR(4000),
     sucess                  boolean,

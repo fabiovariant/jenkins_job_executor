@@ -46,10 +46,10 @@ export default {
       txSearch: null,
       shownItems: null,
       fields: [
-        {key: 'jobName', label: 'Nome'},
-        {key: 'date', label: 'Data'},
-        {key: 'isSuccess', label: 'Execução'},
-        {key: 'details', label: 'Detalhes'}
+        {key: 'job_name', label: 'Nome'},
+        {key: 'dt_exec', label: 'Data'},
+        {key: 'sucess', label: 'Execução'},
+        {key: 'exec_return', label: 'Detalhes'}
       ],
       items: [],
       searchBy: [
@@ -74,6 +74,15 @@ export default {
         })
       }
     }
+  },
+  created: function () {
+    calls.listUserJobs(1)
+    .then(response => {
+      console.log(response.data[1])
+      this.items = response.data.reverse()
+    }).catch(e => {
+      console.log(e)
+    })
   }
 }
 </script>

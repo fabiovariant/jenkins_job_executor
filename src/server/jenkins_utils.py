@@ -45,7 +45,9 @@ class JenkinsUtils(object):
         except:
             print("Unexpected error:", sys.exc_info()[0])
             raise
- 
+    def get_server(self):
+        return self.server
+
     def __connect(self):
         #w_url = re.sub( '\/$', '', self.JENKINS_HOST)
         #w_url = w_url + ':' + str(self.JENKINS_PORT)
@@ -73,6 +75,7 @@ class JenkinsUtils(object):
         return self.server.get_jobs()
  
     def get_job_parameters(self, job_name):
+        print(job_name)
         def get_param_structure(paramDefinition, order, paramType):
             param_elem_dict = {}
             param_elem_dict['name'] = paramDefinition['name']
@@ -112,11 +115,11 @@ class JenkinsUtils(object):
         w_job_config = self.get_job_config(job_name)
         jobDef = json.loads(w_job_config)
  
- 
-        if 'hudson.model.ParametersDefinitionProperty' in  jobDef['project']['properties']:
-            params = jobDef['project']['properties']['hudson.model.ParametersDefinitionProperty']['parameterDefinitions']
-            parsed_params = parse_parameters(params)
-        else:
+        try:
+            if 'hudson.model.ParametersDefinitionProperty' in  jobDef['project']['properties']:
+                params = jobDef['project']['properties']['hudson.model.ParametersDefinitionProperty']['parameterDefinitions']
+                parsed_params = parse_parameters(params)
+        except:
             parsed_params = ""
  
         return parsed_params

@@ -3,10 +3,7 @@
     <b-card-group deck>
       <div v-for="(job, i) in jobs" :key="i">
         <job 
-            :job-name=job.jobName 
-            :job-desc=job.jobDesc 
-            :job-exec-call=job.jobExecCall
-            :is-in-exec=job.isInExec />
+            :job-name=job.jobName />
       </div>
     </b-card-group>
   </div>
@@ -30,6 +27,7 @@ export default {
     listJobs: function () {
       calls.listJobs()
       .then(response => {
+        console.log(response.data)
         this.jobs = response.data
       }).catch(e => {
         console.log('Error getting jobs' + e)

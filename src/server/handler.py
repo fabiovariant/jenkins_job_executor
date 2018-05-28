@@ -2,7 +2,7 @@ import json
 import sys
 import os
 
-from .services import JobService
+from .services import JobService, UserServices
 from .dao import JobDAO
 from flask_restful import Resource
 from .jenkins_utils import JenkinsUtils
@@ -20,12 +20,31 @@ class JobsExec(Resource):
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
         except:
             return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
+    
+class JobHistory(Resource):
 
-    def get(self):
+    def __init__(self):
+        self.service = JobService()
+
+    def get(self, id_user):
         try:
-            data = request.get_json()['data']
-            jobs = self.service.get_user_jobs(data['id_user'])
-            return json.dumps(jobs), 200, {'ContentType':'application/json'}
+            print('oxi')
+            r = self.service.get_job_exec_history(id_user)
+            print(r)
+            return r, 200, {'ContentType':'application/json'}
+        except:
+            return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
+
+class JobsList(Resource):
+
+    def __init__(self):
+        self.service = JobService()
+
+    def get(self, id_user):
+        try:
+            print(id_user)
+            jobs = self.service.get_user_jobs(id_user)
+            return jobs, 200, {'ContentType':'application/json'}
         except:
             return json.dumps({'success': False}), 500, {'ContentType':'application/json'}
 
@@ -37,10 +56,9 @@ class JobDetails(Resource):
     def get(self, job_name):
         try:
             job_details = self.service.get_job_details(job_name)
-            return json.dumps(job_details), 200, {'ContentType':'application/json'}
+            return job_details, 200, {'ContentType':'application/json'}
         except:
             return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
-
 
 class User(Resource):
 
@@ -69,5 +87,30 @@ class JobCad(Resource):
         try:
             jenkins_jobs = self.service.get_jenkins_jobs()
             return jenkins_jobs, 200, {'ContentType':'application/json'}
+        except:
+            return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
+    
+    def post(self):
+        try:
+            data = request.get_json()['data']
+            print(data)
+            nm_job = data['newJob']['nmJob']
+            tp_user = data['newJob']['tpUser']
+            self.service.insert_new_job(nm_job, tp_user)
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+        except:
+            print('Unexpected error 2:', sys.exc_info()[0])
+            return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
+
+class UserType(Resource):
+
+    def __init__(self):
+        self.service = UserServices()
+
+    def get(self):
+        try:
+            r = self.service.get_user_types()
+            print(r)
+            return r, 200, {'ContentType':'application/json'}
         except:
             return json.dumps({'success':False}), 500, {'ContentType':'application/json'}

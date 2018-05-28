@@ -19,9 +19,12 @@ api = Api(app)
 #     return models.RevokedTokenModel.is_jti_blacklisted(jti)
 
 api.add_resource(handler.JobsExec, '/jobsexec')
+api.add_resource(handler.JobHistory, '/job_hist/<string:id_user>')
+api.add_resource(handler.JobsList, '/jobsexec/<string:id_user>')
 api.add_resource(handler.User, '/user')
 api.add_resource(handler.JobDetails, '/job/<string:job_name>')
 api.add_resource(handler.JobCad, '/job')
+api.add_resource(handler.UserType, '/user_types')
 
 if __name__ == '__main__':
     app.run(port=8076, debug=True)

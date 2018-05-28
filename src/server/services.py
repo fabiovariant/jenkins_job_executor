@@ -1,7 +1,11 @@
 import sys
 import time
+import threading
+import traceback
+import json
 
-from .dao import JobDAO
+from jenkins import JenkinsException
+from .dao import JobDAO, UserDAO
 from .jenkins_utils import JenkinsUtils
 from .utils import *
 
@@ -12,7 +16,7 @@ class JobService(object):
         try:
             self.jenkins_server = JenkinsUtils()
         except:
-            print("Unexpected error:", sys.exc_info()[0])
+            print("Unexpected error 1:", sys.exc_info()[0])
             raise
 
     # Executa um job, salva informações sobre a execução e dispara uma Thread que irá verificar
@@ -30,12 +34,20 @@ class JobService(object):
             # Salva apenas considerando que tentou executar, não se preocupa se executou ou não.
             # a thread disparada depois faz esse trabalho.
             id_exec = dao.save(job_name, user)
-            
+            print(id_exec)
+            print('oxi')
             t = threading.Thread(target=self.__keep_job_build_verification, args=(job_name, next_build_number, user, id_exec,))
             t.start()
             conn.commit()
+        except NameError as e:
+            print('Unexpected error:', e)
+            print('Rollback')
+            conn.rollback()
+            raise
         except:
             print('Unexpected error:', sys.exc_info()[0])
+            print('Rollback')
+            conn.rollback()
             raise
         finally:
             conn.close()
@@ -46,18 +58,23 @@ class JobService(object):
         try:
             conn = get_connection()
             dao = JobDAO(conn)
-            build_info = server.get_build_info('build_name', next_build_number)
+            print(job_name)
+            build_info = self.jenkins_server.get_server().get_build_info(job_name, build_number)
             if build_info['building']:
-                time.sleep(60)
-                self.__keep_job_build_verification(job_name, build_number)
+                time.sleep(10)
+                self.__keep_job_build_verification(job_name, build_number, user, id_exec)
             else:
-                job = {
-                    'name': job_name,
-                    'sucess': True if 'SUCCESS' == build_info['result'] else False,
-                    'finished': True,
-                }
                 success = True if 'SUCCESS' == build_info['result'] else False
-                dao.update_exec(id_exec, job, user, str(build_info), success)
+                dao.update_exec(id_exec, job_name, user, str(build_info), success)
+            conn.commit()
+        except JenkinsException as e:
+            print('Erro', e)
+            time.sleep(10)
+            self.__keep_job_build_verification(job_name, build_number, user, id_exec)
+        except:
+            print('Unexpected error:', sys.exc_info()[0])
+            time.sleep(10)
+            self.__keep_job_build_verification(job_name, build_number, user, id_exec)
         finally:
             conn.close()
     
@@ -66,8 +83,8 @@ class JobService(object):
         try:
             conn = get_connection()
             dao = JobDAO(conn)
-            return dao.getUserJobs(user)
-            conn.commit()
+            print('ok')
+            return dao.get_user_jobs(user)
         except:
             print('Unexpected error:', sys.exc_info()[0])
             raise
@@ -78,14 +95,73 @@ class JobService(object):
     # retorna os parametros de execução se esses existirem.
     def get_job_details(self, job_name):
         try:
+            print(job_name)
             job_info = {
                 'parameters': self.jenkins_server.get_job_parameters(job_name),
                 'job_config': self.jenkins_server.get_job_config(job_name)
             }
             return job_info
         except:
+            traceback.print_exc(file=sys.stdout)
+            print('Unexpected error:', sys.exc_info()[0])
             raise
 
     def get_jenkins_jobs(self):
         jobs = self.jenkins_server.get_all_jenkins_job()
+        print(jobs)
+        conn = get_connection()
+        dao = JobDAO(conn)
+        r_jobs = dao.get_registred_jobs()
+        for job in jobs:
+            j_nm = job['name']
+            for r_job in r_jobs:
+                if j_nm == r_job['nm_Job']:
+                    jobs.remove(job)
         return jobs
+
+    def insert_new_job(self, nm_job, tp_user):
+        try:
+            print(nm_job)
+            print(tp_user)
+            conn = get_connection()
+            dao = JobDAO(conn)
+            r_id = dao.insert_new_job(str(nm_job))
+            for u_type in tp_user:
+                dao.insert_job_user_permission(r_id, u_type)
+            conn.commit()
+        except:
+            print('Unexpected error:', sys.exc_info()[0])
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
+    
+    def get_job_exec_history(self, user_id):
+        try:
+            conn = get_connection()
+            dao = JobDAO(conn)
+            r = dao.get_job_exec_history(user_id)
+            return r
+        except:
+            print('Unexpected error:', sys.exc_info()[0])
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
+
+
+class UserServices(object):
+
+    def get_user_types(self):
+        try:
+            conn = get_connection()
+            dao = UserDAO(conn)
+            r = dao.getUserTypes()
+            conn.commit()
+            return r
+        except:
+            print('Unexpected error:', sys.exc_info()[0])
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
