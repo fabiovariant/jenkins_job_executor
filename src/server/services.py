@@ -25,20 +25,33 @@ class JobService(object):
     # user: Informações sobre o usuário que executou o job.
     # job_name: Nome do Job.
     # params: Parametros para execução do job.
-    def exec_job(self, user, job_name, params):
+    def exec_job(self, user, job_name, params, files=None):
         try:
             conn = get_connection()
             dao = JobDAO(conn)
             next_build_number = self.jenkins_server.get_job_info(job_name)['nextBuildNumber']
-            self.jenkins_server.build_job(job_name, params)
+            print('''1 ################''')
+            print(params)
+            obj = json.loads(params)
+            print('''2 ################''')
+            pr = dict()
+            for o in obj:
+                print("IO" + obj[o]['name'])
+                if 'type' in obj[o] and obj[o]['type'] != 'file':
+                    pr[obj[o]['name']] = obj[o]['field_value']
+            print(pr)
+            self.jenkins_server.build_job(job_name, pr, files=files)
             # Salva apenas considerando que tentou executar, não se preocupa se executou ou não.
             # a thread disparada depois faz esse trabalho.
             id_exec = dao.save(job_name, user)
-            print(id_exec)
-            print('oxi')
             t = threading.Thread(target=self.__keep_job_build_verification, args=(job_name, next_build_number, user, id_exec,))
             t.start()
             conn.commit()
+        except NameError as e:
+            print('Unexpected error:', e)
+            print('Rollback')
+            conn.rollback()
+            raise
         except NameError as e:
             print('Unexpected error:', e)
             print('Rollback')

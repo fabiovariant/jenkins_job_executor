@@ -6,6 +6,7 @@ import json
 import re
 import requests
 import os
+from jenkinsapi.jenkins import Jenkins
 
 
 def get_job_details(server):
@@ -52,7 +53,7 @@ class JenkinsUtils(object):
         #w_url = re.sub( '\/$', '', self.JENKINS_HOST)
         #w_url = w_url + ':' + str(self.JENKINS_PORT)
         jenkins_url = self.JENKINS_HOST + ':' + self.JENKINS_PORT
-        return jenkins.Jenkins(jenkins_url,  username=self.JENKINS_USER, password=self.JENKINS_PASS)
+        return jenkins.Jenkins(jenkins_url, username=self.JENKINS_USER, password=self.JENKINS_PASS)
  
     def get_job_config(self, job_name):
         w_job_config = self.server.get_job_config(job_name)
@@ -68,8 +69,12 @@ class JenkinsUtils(object):
     def get_job_info(self, job_name):
         return self.server.get_job_info(job_name)
 
-    def build_job(self, job_name, params=None):
-        self.server.build_job(job_name, params)
+    def build_job(self, job_name, params=None, files=None):
+        jenkins_url = self.JENKINS_HOST + ':' + self.JENKINS_PORT
+        jenkins = Jenkins(jenkins_url, username=self.JENKINS_USER, password=self.JENKINS_PASS)
+        job = jenkins[job_name]
+        qi = job.invoke(build_params=params, files=files)
+
 
     def get_all_jenkins_job(self):
         return self.server.get_jobs()

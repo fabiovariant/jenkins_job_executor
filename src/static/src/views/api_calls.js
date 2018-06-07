@@ -7,18 +7,13 @@ function listJobs () {
   return axios.get(API_URL + '/jobsexec/ROOT')
 }
 
-function exec (exJobName) {
-  return axios.post(API_URL + '/jobsexec', {
+function exec (exJobName, formData) {
+  return axios.post(API_URL + '/jobsexec', formData, {
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'application/json'
+      'Content-Type': 'multipart/form-data'
     },
-    crossDomain: true,
-    data: {
-      job_name: exJobName,
-      id_user: 1,
-      params: null
-    }
+    crossDomain: true
   })
 }
 

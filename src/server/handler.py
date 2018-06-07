@@ -15,10 +15,13 @@ class JobsExec(Resource):
 
     def post(self):
         try:
-            data = request.get_json()['data']
-            r = self.service.exec_job(data['id_user'], data['job_name'], data['params'])
+            form = request.form
+            f = request.files
+            print(f)
+            r = self.service.exec_job(form['id_user'], form['job_name'], form['params'], files=f)
             return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
         except:
+            print('Unexpected error:', sys.exc_info()[0])
             return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
     
 class JobHistory(Resource):
@@ -28,11 +31,11 @@ class JobHistory(Resource):
 
     def get(self, id_user):
         try:
-            print('oxi')
             r = self.service.get_job_exec_history(id_user)
             print(r)
             return r, 200, {'ContentType':'application/json'}
         except:
+            print('Unexpected error:', sys.exc_info()[0])
             return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
 class JobsList(Resource):
@@ -46,6 +49,7 @@ class JobsList(Resource):
             jobs = self.service.get_user_jobs(id_user)
             return jobs, 200, {'ContentType':'application/json'}
         except:
+            print('Unexpected error:', sys.exc_info()[0])
             return json.dumps({'success': False}), 500, {'ContentType':'application/json'}
 
 class JobDetails(Resource):

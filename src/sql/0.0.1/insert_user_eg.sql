@@ -1,0 +1,1 @@
+INSERT INTO user (nm_User, nm_Email, user_password, cd_user_Type, is_Blocked) VALUES ('Fabio Silva', 'fabio.silva@email.com', 'papada', 'ROOT', false)
